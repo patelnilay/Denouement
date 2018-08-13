@@ -34,3 +34,7 @@ body {
 .unrounded-alert {
     border-radius: 0;
 }
+
+#id_image {
+    color: red;
+}

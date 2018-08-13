@@ -3,8 +3,11 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
+from django.views.decorators.http import require_http_methods
+from django.contrib.auth.decorators import login_required
 
-from .forms import SignInForm, SignUpForm
+from .forms import SignInForm, SignUpForm, ImageForm
+from .models import ProfilePicture
 
 def index(request):
     success = request.session.pop('alert', None)
@@ -81,3 +84,22 @@ def sign_out(request):
     logout(request)
     request.session['alert'] = 'You\'ve successfully logged out'
     return redirect('/')
+
+def view_account(request):
+    form = ImageForm()
+    img_url = '/media/' + request.user.username + '.jpg'
+    return render(request, 'denouement/account.html', {'form': form, 'img_url': img_url})
+
+@require_http_methods(['POST'])
+@login_required
+def upload_image(request):
+    # we're going to need to look at security
+    # file type
+    # file size
+    # (a lot of stuff will be done by a production web server i.e Apache and it's URL specific upload sizes etc)
+    # more stuff...
+    with open('media/' + request.user.username + '.jpg', 'wb+') as destination:
+        for chunk in request.FILES['image'].chunks():
+            destination.write(chunk)
+
+    return redirect('../account')

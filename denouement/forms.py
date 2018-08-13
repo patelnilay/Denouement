@@ -37,3 +37,6 @@ class SignUpForm(forms.Form):
             'class': 'form-control'
         }
     ))
+
+class ImageForm(forms.Form):
+    image = forms.ImageField()

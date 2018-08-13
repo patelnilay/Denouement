@@ -1,0 +1,36 @@
+.navbar {
+    background-color: #7d5fff;
+}
+
+body {
+    font-family: 'Montserrat';
+    background-color: #130f40;
+    color: white;
+}
+
+#top_container {
+    margin-top: 20%;
+}
+
+#title {
+    font-weight: 800;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 5%;
+}
+
+.title-button {
+    margin-bottom: 2%;
+}
+
+.login-button {
+    margin-top: 2%;
+}
+
+#login-form {
+    margin-top: 15%;
+}
+
+.unrounded-alert {
+    border-radius: 0;
+}

@@ -1,0 +1,18 @@
+{% extends 'denouement/base.html' %}
+
+
+{% block content %}
+    {% if error %}
+        <div class="alert alert-danger unrounded-alert" role="alert">
+          {{ error }}
+        </div>
+    {% endif %}
+    <form method="post">
+        <div class="form-group col-md-8 offset-md-2" id="login-form">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" class="btn btn-outline-primary title-button
+login-button col-md-4 col-12" value="Sign Up">
+        </div>
+    </form>
+{% endblock %}

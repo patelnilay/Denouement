@@ -11,6 +11,9 @@ def index(request):
     return render(request, 'denouement/index.html', {'success': success})
 
 def sign_in(request):
+    if request.user.is_authenticated:
+        return redirect('/account')
+
     form = SignInForm()
 
     if request.method == "POST":
@@ -35,6 +38,9 @@ def sign_in(request):
     return render(request, 'denouement/sign_in.html', {'form': form})
 
 def sign_up(request):
+    if request.user.is_authenticated:
+        return redirect('/account')
+
     form = SignUpForm()
 
     if request.method == 'POST':

@@ -1,0 +1,27 @@
+{% extends 'denouement/base.html' %}
+
+
+{% block content %}
+    <div class="container category-list">
+        <h1>Forums</h1>
+        {% for category in categories %}
+                <div class="row category-container align-items-center">
+                    <div class="col-8" style="padding-left: 0;">
+                        <div class="col-sm-12 col-md-9" style="padding-top: .5em; color: #1B9CFC;">
+                            <a href="/forums/{{ category.id }}"><h4>{{ category.title }}</h4></a>
+                        </div>
+
+                        <div class="col-sm-12 col-md-12" >
+                            <h6>{{ category.subtitle }}</h6>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <div class="col-12">
+                            <h6 style="margin-bottom: 0;">POSTS: 100</h6>
+                        </div>
+                    </div>        
+                </div>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -38,3 +38,14 @@ body {
 #id_image {
     color: red;
 }
+
+.category-list {
+    margin-top: 5%;
+}
+
+.category-container {
+    background-color: #4527a0;
+    opacity: 50;
+    margin-bottom: 2px;
+    margin-left: 0;
+}

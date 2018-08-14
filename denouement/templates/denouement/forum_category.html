@@ -1,0 +1,16 @@
+{% extends 'denouement/base.html' %}
+
+{% block content %}
+    <div class="container category-list">
+        <h1>{{ category_title }}</h1>
+        {% for thread in threads %}
+                <div class="row category-container align-items-center">
+                    <div class="col-8" style="padding-left: 0;">
+                        <div class="col-sm-12 col-md-9" style="padding-top: .5em; color: #1B9CFC;">
+                            <a href="/forums/{{ thread.id }}"><h4>{{ thread.title }}</h4></a>
+                        </div>
+                    </div>       
+                </div>
+        {% endfor %}
+    </div>
+{% endblock %}

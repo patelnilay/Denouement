@@ -1,17 +1,11 @@
 {% extends 'denouement/base.html' %}
 
-
 {% block content %}
-    {% if success %}
-        <div class="alert dismissable-alert alert-success unrounded-alert" role="alert">
-          {{ success }}
-        </div>
-    {% endif %}
     <div class="container" id="top_container">
         <h1 id="title">Welcome to ___'s Denouement</h1>
         <div class="col-12">
-            <button type="button" class="col-md-2 offset-md-4 col-8 offset-2 btn btn-outline-primary title-button">Forums</button>
-            <button type="button" class="col-md-2 offset-md-0 offset-2 col-8 btn btn-outline-success title-button">Tickets</button>
+            <a href="/forums" type="button" class="col-md-2 offset-md-4 col-8 offset-2 btn btn-outline-primary title-button">Forums</a>
+            <a href="/tickets"type="button" class="col-md-2 offset-md-0 offset-2 col-8 btn btn-outline-success title-button">Tickets</a>
         </div>
     </div>
 {% endblock %}

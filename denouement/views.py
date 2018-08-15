@@ -23,59 +23,46 @@ def forums(request):
 
     return render(request, 'denouement/forums_index.html', {'categories': categories})
 
-# This get's called when the title isn't specified and redirects to a URL with the title
-# TODO: This could probably be better and it should be clearer this leads to view_forum_category
-def view_forum_category_untitled(request, id):
+def view_untitled_objects(model_type, id):
     try: 
-        category = ForumCategory.objects.get(id=id)
+        obj = model_type.objects.get(id=id)
     except ForumCategory.DoesNotExist:
         # TODO: add some error
         return redirect("/forums")
-    return redirect(str(category.id) + "/" + category.title.replace(' ', '-').lower())
+    return redirect(str(obj.id) + "/" + obj.title.replace(' ', '-').lower())
 
-# NOTE: Title is cosmetic and doesn't even matter, this will always be corrected
-def view_forum_category(request, id, title):
+def view_titled_objects(request, model_type, related_model, id, title, template_name, output_name):
     try: 
-        category = ForumCategory.objects.get(id=id)
+        obj = model_type.objects.get(id=id)
     except ForumCategory.DoesNotExist:
         # TODO: add some error
         return redirect("/forums")
 
     # For that wise guy who didn't copy and paste right
-    # TODO: Unshitify?
-    if title.replace('-', ' ').lower() != category.title.lower():
-        # Needed the initial / to stop Django thinking it was a reverse thing, research this?
-        return redirect("../" + str(category.id) + "/" + str(category.title.replace(' ', '-').lower()))
+    if title.replace('-', ' ').lower() != obj.title.lower():
+        return redirect("../" + str(obj.id) + "/" + str(obj.title.replace(' ', '-').lower()))
 
-    threads = ForumThread.objects.filter(category=category)
+    desired_objs = None
 
-    return render(request, 'denouement/forum_category.html', {'threads': threads, 'category_title': category.title})
+    if model_type._meta.object_name == "ForumThread":
+        desired_objs = related_model.objects.filter(thread=obj)
+    elif model_type._meta.object_name == "ForumCategory":
+        desired_objs = related_model.objects.filter(category=obj)
+    # TODO: Maybe raise an error incase i'm doing something dumb with the wrong model?
+
+    return render(request, 'denouement/' + template_name + '.html', {output_name: desired_objs})
+    
+def view_forum_category_untitled(request, id):
+    return view_untitled_objects(ForumCategory, id)
+
+def view_forum_category(request, id, title):
+    return view_titled_objects(request, ForumCategory, ForumThread, id, title, 'forum_category', 'threads')
 
 def view_forum_thread_untitled(request, id):
-    try: 
-        thread = ForumThread.objects.get(id=id)
-    except ForumThread.DoesNotExist:
-        # TODO: add some error
-        return redirect("/forums")
-    return redirect(str(thread.id) + "/" + thread.title.replace(' ', '-').lower())
+    return view_untitled_objects(ForumCategory, id)
 
-# NOTE: Title is cosmetic and doesn't even matter, this will always be corrected
 def view_forum_thread(request, id, title):
-    try: 
-        thread = ForumThread.objects.get(id=id)
-    except ForumThread.DoesNotExist:
-        # TODO: add some error
-        return redirect("/forums")
-
-    # For that wise guy who didn't copy and paste right
-    # TODO: Unshitify?
-    if title.replace('-', ' ').lower() != thread.title.lower():
-        # Needed the initial / to stop Django thinking it was a reverse thing, research this?
-        return redirect("../" + str(thread.id) + "/" + str(thread.title.replace(' ', '-').lower()))
-
-    posts = ForumPost.objects.filter(thread=thread)
-
-    return render(request, 'denouement/forum_thread.html', {'posts': posts})
+    return view_titled_objects(request, ForumThread, ForumPost, id, title, 'forum_thread', 'posts')
 
 def sign_in(request):
     if request.user.is_authenticated:

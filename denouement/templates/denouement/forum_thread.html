@@ -5,15 +5,16 @@
         {% for post in posts %}
             <h1>{{ post.thread.title }}</h1>
                 <div class="row category-container align-items-center">
-                    <div class="col-8" style="padding-left: 0;">
-                        <div class="col-sm-12 col-md-9" style="padding-top: .5em; color: #1B9CFC;">
-                            {% with "/media/"|add:post.author.username|add:".jpg" as picture_url %}
-                                    <img style="width:100px; height: 100px;" class="card-img-top" src="{{ picture_url }}" alt="Card image cap">
-                                    <p>{{ post.author.username }}</p>
-                            {% endwith %}
-                            <h4>{{ post.text }}</h4>
-                        </div>
-                    </div>   
+                    <div class="col-12 col-sm-2" style="background-color: #6e55ba;">
+                        {% with "/media/"|add:post.author.username|add:".jpg" as picture_url %}
+                                <img style="width:100px; height: 100px; border-radius: 100%;" class="card-img-top" src="{{ picture_url }}" alt="Card image cap">
+                                <p>{{ post.author.username }}</p>
+                        {% endwith %}
+                    </div>  
+
+                    <div class="col-12 col-sm-10">
+                        <h4>{{ post.text }}</h4>
+                    </div> 
                 </div>
         {% endfor %}
     </div>

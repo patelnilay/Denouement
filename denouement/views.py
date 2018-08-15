@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from PIL import Image
 
 from .forms import SignInForm, SignUpForm, ImageForm
-from .models import ProfilePicture, ForumCategory, ForumThread
+from .models import ProfilePicture, ForumCategory, ForumThread, ForumPost
 
 def index(request):
     success = request.session.pop('alert', None)
@@ -51,7 +51,31 @@ def view_forum_category(request, id, title):
 
     return render(request, 'denouement/forum_category.html', {'threads': threads, 'category_title': category.title})
 
+def view_forum_thread_untitled(request, id):
+    try: 
+        thread = ForumThread.objects.get(id=id)
+    except ForumThread.DoesNotExist:
+        # TODO: add some error
+        return redirect("/forums")
+    return redirect(str(thread.id) + "/" + thread.title.replace(' ', '-').lower())
 
+# NOTE: Title is cosmetic and doesn't even matter, this will always be corrected
+def view_forum_thread(request, id, title):
+    try: 
+        thread = ForumThread.objects.get(id=id)
+    except ForumThread.DoesNotExist:
+        # TODO: add some error
+        return redirect("/forums")
+
+    # For that wise guy who didn't copy and paste right
+    # TODO: Unshitify?
+    if title.replace('-', ' ').lower() != thread.title.lower():
+        # Needed the initial / to stop Django thinking it was a reverse thing, research this?
+        return redirect("../" + str(thread.id) + "/" + str(thread.title.replace(' ', '-').lower()))
+
+    posts = ForumPost.objects.filter(thread=thread)
+
+    return render(request, 'denouement/forum_thread.html', {'posts': posts})
 
 def sign_in(request):
     if request.user.is_authenticated:

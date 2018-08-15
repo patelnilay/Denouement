@@ -7,9 +7,18 @@
                 <div class="row category-container align-items-center">
                     <div class="col-8" style="padding-left: 0;">
                         <div class="col-sm-12 col-md-9" style="padding-top: .5em; color: #1B9CFC;">
-                            <a href="/forums/{{ thread.id }}"><h4>{{ thread.title }}</h4></a>
+                            <a href="/forums/thread/{{ thread.id }}"><h4>{{ thread.title }}</h4></a>
                         </div>
-                    </div>       
+                    </div>   
+
+                    <div class="col-2" style="padding-left: 0; text-align: center;">
+                        <p style="margin-bottom: 0;">{{ thread.post_count}}<br>POST{{ thread.post_count|pluralize }}</p>
+                    </div>
+
+                    <div class="col-2" style="padding-left: 0; text-align: center;">
+                        <p style="margin-bottom: 0;">LATEST POST</p>
+                    </div>
+    
                 </div>
         {% endfor %}
     </div>

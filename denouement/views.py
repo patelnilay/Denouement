@@ -14,12 +14,15 @@ def index(request):
     success = request.session.pop('alert', None)
     return render(request, 'denouement/index.html', {'success': success})
 
+def obj_to_url_string(obj):
+    return obj.title.replace(' ', '-').lower()
+
 def forums(request):
     categories = ForumCategory.objects.all()
 
     # Uhh not sure about this
     for category in categories:
-        category.url = category.title.replace(' ', '-').lower()
+        category.url = obj_to_url_string(category) #category.title.replace(' ', '-').lower()
 
     return render(request, 'denouement/forums_index.html', {'categories': categories})
 
@@ -29,7 +32,7 @@ def view_untitled_objects(model_type, id):
     except ForumCategory.DoesNotExist:
         # TODO: add some error
         return redirect("/forums")
-    return redirect(str(obj.id) + "/" + obj.title.replace(' ', '-').lower())
+    return redirect(str(obj.id) + "/" + obj_to_url_string(obj))
 
 def view_titled_objects(request, model_type, related_model, id, title, template_name, output_name):
     try: 
@@ -40,17 +43,21 @@ def view_titled_objects(request, model_type, related_model, id, title, template_
 
     # For that wise guy who didn't copy and paste right
     if title.replace('-', ' ').lower() != obj.title.lower():
-        return redirect("../" + str(obj.id) + "/" + str(obj.title.replace(' ', '-').lower()))
+        return redirect("../" + str(obj.id) + "/" + obj_to_url_string(obj))
 
     desired_objs = None
+    parent_name = None
 
     if model_type._meta.object_name == "ForumThread":
         desired_objs = related_model.objects.filter(thread=obj)
+        parent_name = obj.title
     elif model_type._meta.object_name == "ForumCategory":
         desired_objs = related_model.objects.filter(category=obj)
+        parent_name = obj.title
+
     # TODO: Maybe raise an error incase i'm doing something dumb with the wrong model?
 
-    return render(request, 'denouement/' + template_name + '.html', {output_name: desired_objs})
+    return render(request, 'denouement/' + template_name + '.html', {output_name: desired_objs, 'parent_name': parent_name})
     
 def view_forum_category_untitled(request, id):
     return view_untitled_objects(ForumCategory, id)

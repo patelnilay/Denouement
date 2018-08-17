@@ -2,8 +2,8 @@
 
 {% block content %}
     <div class="container category-list">
+        <h1>{{ parent_name }}</h1>
         {% for post in posts %}
-            <h1>{{ post.thread.title }}</h1>
                 <div class="row category-container align-items-center">
                     <div class="col-12 col-sm-2" style="background-color: #6e55ba;">
                         {% with "/media/"|add:post.author.username|add:".jpg" as picture_url %}

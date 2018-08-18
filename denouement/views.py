@@ -29,15 +29,16 @@ def forums(request):
 def view_untitled_objects(model_type, id):
     try: 
         obj = model_type.objects.get(id=id)
-    except ForumCategory.DoesNotExist:
+    except model_type.DoesNotExist:
         # TODO: add some error
+
         return redirect("/forums")
     return redirect(str(obj.id) + "/" + obj_to_url_string(obj))
 
 def view_titled_objects(request, model_type, related_model, id, title, template_name, output_name):
     try: 
         obj = model_type.objects.get(id=id)
-    except ForumCategory.DoesNotExist:
+    except model_type.DoesNotExist:
         # TODO: add some error
         return redirect("/forums")
 
@@ -49,10 +50,10 @@ def view_titled_objects(request, model_type, related_model, id, title, template_
     parent_name = None
 
     if model_type._meta.object_name == "ForumThread":
-        desired_objs = related_model.objects.filter(thread=obj)
+        desired_objs = related_model.objects.filter(thread=obj).order_by('-date')
         parent_name = obj.title
     elif model_type._meta.object_name == "ForumCategory":
-        desired_objs = related_model.objects.filter(category=obj)
+        desired_objs = related_model.objects.filter(category=obj).order_by('-date')
         parent_name = obj.title
 
     # TODO: Maybe raise an error incase i'm doing something dumb with the wrong model?
@@ -66,7 +67,7 @@ def view_forum_category(request, id, title):
     return view_titled_objects(request, ForumCategory, ForumThread, id, title, 'forum_category', 'threads')
 
 def view_forum_thread_untitled(request, id):
-    return view_untitled_objects(ForumCategory, id)
+    return view_untitled_objects(ForumThread, id)
 
 def view_forum_thread(request, id, title):
     return view_titled_objects(request, ForumThread, ForumPost, id, title, 'forum_thread', 'posts')

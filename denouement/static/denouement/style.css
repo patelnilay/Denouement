@@ -8,6 +8,8 @@ body {
     color: white;
 }
 
+
+
 #top_container {
     margin-top: 20%;
 }
@@ -43,9 +45,52 @@ body {
     margin-top: 5%;
 }
 
-.category-container {
-    background-color: #4527a0;
-    margin-bottom: 2px;
-    margin-left: 0;
-    margin-right: 0;
+.list-segment {
+    padding: 0;
+    margin: 0;
+}
+
+.no-padding {
+    padding: 0;
+}
+
+.no-margin {
+    margin: 0;
+}
+
+.master-row {
+    margin-bottom: 1%;
+}
+
+.list-title {
+    margin-bottom: 2%;
+}
+
+.sm-profile-picture {
+    width:50px; 
+    height: 50px; 
+    margin-right: 10px;
+    border-radius: 100%; 
+    float: left;
+}
+
+.md-profile-picture {
+    width: 75px;
+    height: 75px;
+    border-radius: 100%;
+    margin-bottom: 10px;
+}
+
+.thread-user-card {
+    padding: 0;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+h6 {
+    color: white;
+}
+
+* {
+    word-wrap: break-word;
 }

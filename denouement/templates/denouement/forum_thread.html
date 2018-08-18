@@ -2,20 +2,24 @@
 
 {% block content %}
     <div class="container category-list">
-        <h1>{{ parent_name }}</h1>
+        <h1 class="list-title">{{ parent_name }}</h1>
         {% for post in posts %}
-                <div class="row category-container align-items-center">
-                    <div class="col-12 col-sm-2" style="background-color: #6e55ba;">
-                        {% with "/media/"|add:post.author.username|add:".jpg" as picture_url %}
-                                <img style="width:100px; height: 100px; border-radius: 100%;" class="card-img-top" src="{{ picture_url }}" alt="Card image cap">
-                                <p>{{ post.author.username }}</p>
-                        {% endwith %}
-                    </div>  
+            <div class="row align-items-center no-margin master-row">
+                <div class="col-md-2 col-12 thread-user-card text-center align-self-start">
+                    {% with "/media/"|add:post.author.username|add:".jpg" as picture_url %}
+                        <img class="md-profile-picture mx-auto" src="{{ picture_url }}" alt="">
+                    {% endwith %}
 
-                    <div class="col-12 col-sm-10">
-                        <h4>{{ post.text }}</h4>
-                    </div> 
+                    <h6>{{ post.author }}</h6>
+                    <br>
+                    <h6>GROUP PLACEHOLDER</h6>
                 </div>
+                
+                <div class="col-12 col-md-10 align-self-start">
+                    <p>{{ post.text }}</p>
+                </div>
+            </div>
+            <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
         {% endfor %}
     </div>
 {% endblock %}

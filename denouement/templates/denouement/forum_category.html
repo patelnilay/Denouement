@@ -5,7 +5,7 @@
         <h1 class="list-title">{{ parent_name }}</h1>
         {% for thread in threads %}
             <div class="row align-items-center no-margin master-row">
-                <div class="col-12 col-md-8 no-padding">
+                <div class="col-12 no-padding">
                     {% with "/media/"|add:thread.author.username|add:".jpg" as picture_url %}
                         <img class="sm-profile-picture" src="{{ picture_url }}" alt="">
                     {% endwith %}
@@ -14,13 +14,16 @@
                     </div>
 
                     <div class="col-12 col-sm-12 col-md-12 no-padding">
-                        <h6>AUTHOR PLACEHOLDER | DATE PLACEHOLDER</h6>
+                        <h6 style="display: inline">{{ thread.author }} | </h6>
+                        <h6 style="display: inline">{{ thread.date }}</h6>
                     </div>
                 </div> 
 
+                <!--
                 <div class="d-none d-md-block offset-md-2 col-md-2">
                     <h6 class="no-margin">LATEST POST PLACEHOLDER</h6>
                 </div>
+                -->
             </div>
         {% endfor %}
     </div>

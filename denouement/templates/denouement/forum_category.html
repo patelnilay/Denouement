@@ -3,6 +3,8 @@
 {% block content %}
     <div class="container category-list">
         <h1 class="list-title">{{ parent_name }}</h1>
+        <a type="submit" href="{{ post_url }}" style="margin-top: 10px;" class="col-md-4 col-8 btn btn-outline-primary title-button">NEW THREAD</a>
+
         {% for thread in threads %}
             <div class="row align-items-center no-margin master-row">
                 <div class="col-12 no-padding">

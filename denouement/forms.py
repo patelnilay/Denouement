@@ -40,3 +40,21 @@ class SignUpForm(forms.Form):
 
 class ImageForm(forms.Form):
     image = forms.ImageField()
+
+class PostForm(forms.Form):
+    text = forms.CharField(max_length=60000,
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )
+
+class ThreadForm(forms.Form):
+    title = forms.CharField(max_length=100,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )

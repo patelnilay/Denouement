@@ -1,0 +1,15 @@
+{% extends 'denouement/base.html' %}
+
+{% block content %}
+    <div class="container category-list">
+        {% if user.is_authenticated %}
+            <form method="POST">
+                {% csrf_token %}
+                {% for form in forms %}    
+                    {{ form }}
+                {% endfor %}
+                <input type="submit" value="POST" style="margin-top: 10px;" class="col-md-2 offset-md-0 offset-2 col-8 btn btn-outline-success title-button">
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}

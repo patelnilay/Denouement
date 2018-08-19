@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
@@ -7,15 +9,17 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from PIL import Image
 
-from .forms import SignInForm, SignUpForm, ImageForm
+from .forms import SignInForm, SignUpForm, ImageForm, PostForm, ThreadForm
 from .models import ProfilePicture, ForumCategory, ForumThread, ForumPost
+
+import re
 
 def index(request):
     success = request.session.pop('alert', None)
     return render(request, 'denouement/index.html', {'success': success})
 
 def obj_to_url_string(obj):
-    return obj.title.replace(' ', '-').lower()
+    return re.sub("[^0-9a-zA-Z_-]+", "",obj.title.replace(' ', '-').lower())
 
 def forums(request):
     categories = ForumCategory.objects.all()
@@ -25,6 +29,31 @@ def forums(request):
         category.url = obj_to_url_string(category) #category.title.replace(' ', '-').lower()
 
     return render(request, 'denouement/forums_index.html', {'categories': categories})
+
+@login_required
+def post_thread(request, category_id):
+    try:
+        category = ForumCategory.objects.get(id=category_id)
+    except ForumCategory.DoesNotExist:
+        return redirect('/forums')
+
+    title = request.POST.get('title', None)
+    text = request.POST.get('text', None)
+
+    forms = [ThreadForm(), PostForm()]
+
+    if text == None or title == None or text[0].isspace() or title[0].isspace():
+        return render(request, 'denouement/forum_post_thread.html', {'forms': forms})
+ 
+
+    if request.method == "POST":
+        date = datetime.now()
+        thread = ForumThread.objects.create(title=title, category=category, author=request.user, date=date)
+        ForumPost.objects.create(text=text, author=request.user, thread=thread, date=date)
+        return redirect('/forums/thread/' + str(thread.id))
+
+
+    return render(request, 'denouement/forum_post_thread.html', {'forms': forms})
 
 def view_untitled_objects(model_type, id):
     try: 
@@ -42,23 +71,27 @@ def view_titled_objects(request, model_type, related_model, id, title, template_
         # TODO: add some error
         return redirect("/forums")
 
-    # For that wise guy who didn't copy and paste right
-    if title.replace('-', ' ').lower() != obj.title.lower():
+    # We only want alphanumeric and hyphens in URL's
+    if title != re.sub("[^0-9a-zA-Z_-]+", "",obj.title.replace(' ', '-').lower()):
         return redirect("../" + str(obj.id) + "/" + obj_to_url_string(obj))
 
     desired_objs = None
     parent_name = None
+    form = None
+    post_url = None
 
     if model_type._meta.object_name == "ForumThread":
-        desired_objs = related_model.objects.filter(thread=obj).order_by('-date')
+        desired_objs = related_model.objects.filter(thread=obj)
         parent_name = obj.title
+        form = PostForm()
     elif model_type._meta.object_name == "ForumCategory":
         desired_objs = related_model.objects.filter(category=obj).order_by('-date')
         parent_name = obj.title
+        post_url = "/forums/post/" + str(obj.id)
 
     # TODO: Maybe raise an error incase i'm doing something dumb with the wrong model?
 
-    return render(request, 'denouement/' + template_name + '.html', {output_name: desired_objs, 'parent_name': parent_name})
+    return render(request, 'denouement/' + template_name + '.html', {output_name: desired_objs, 'parent_name': parent_name, 'post_url': post_url, 'form': form})
     
 def view_forum_category_untitled(request, id):
     return view_untitled_objects(ForumCategory, id)
@@ -70,6 +103,11 @@ def view_forum_thread_untitled(request, id):
     return view_untitled_objects(ForumThread, id)
 
 def view_forum_thread(request, id, title):
+    # Probably tell the user they don't have permission
+    if request.method == "POST" and request.user.is_authenticated:
+        text = request.POST.get('text', None)
+        ForumPost.objects.create(text=text, author=request.user, thread=ForumThread.objects.get(id=id), date=datetime.now())
+
     return view_titled_objects(request, ForumThread, ForumPost, id, title, 'forum_thread', 'posts')
 
 def sign_in(request):

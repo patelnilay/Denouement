@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from PIL import Image
 
 from .forms import SignInForm, SignUpForm, ImageForm, PostForm, ThreadForm
-from .models import ProfilePicture, ForumCategory, ForumThread, ForumPost
+from .models import ForumCategory, ForumThread, ForumPost
 
 import re
 

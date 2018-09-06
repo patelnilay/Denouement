@@ -3,7 +3,7 @@ from datetime import datetime
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth.password_validation import validate_password
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
@@ -169,8 +169,10 @@ def sign_up(request):
         if error:
             return render(request, 'denouement/sign_up.html', {'form': form, 'error': error})
         else:
-            User.objects.create_user(username=username, password=password, email=email)
-            
+            user = User.objects.create_user(username=username, password=password, email=email)
+            default_user_group = Group.objects.get(name='User')
+            default_user_group.user_set.add(user)
+
             alert = 'Congratulations, you registered an account!'
             request.session['alert'] = alert
 

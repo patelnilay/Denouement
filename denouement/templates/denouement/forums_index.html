@@ -1,6 +1,5 @@
 {% extends 'denouement/base.html' %}
 
-
 {% block content %}
     <div class="container category-list">
         <h1 class="list-title">Forums</h1>
@@ -8,7 +7,7 @@
             <div class="row align-items-center no-margin master-row">
                 <div class="col-12 no-padding">
                     <div class="col-12 col-sm-12 col-md-9 no-padding">
-                        <a href="/forums/categories/{{ category.id }}"><h4>{{ category.title }}</h4></a>
+                        <a href="categories/{{ category.id }}"><h4>{{ category.title }}</h4></a>
                     </div>
 
                     <div class="col-12 no-padding">

@@ -1,5 +1,4 @@
 {% extends 'denouement/base.html' %}
-
 {% block content %}
     <div class="container category-list">
         <h1 class="list-title">{{ parent_name }}</h1>
@@ -7,27 +6,54 @@
             <div class="row align-items-center no-margin master-row">
                 <div class="col-md-2 col-12 thread-user-card text-center align-self-start">
                     {% with "/media/"|add:post.author.username|add:".jpg" as picture_url %}
-                        <img class="md-profile-picture mx-auto" src="{{ picture_url }}" alt="">
-                    {% endwith %}
-
-                    <h6>{{ post.author }}</h6>
-                    <br>
-                    <h6>{{ post.author.groups.all.0 }}</h6>
-                </div>
-                
-                <div class="col-12 col-md-10 align-self-start">
-                    <p>{{ post.text }}</p>
+                    <img class="md-profile-picture mx-auto" src="{{ picture_url }}" alt="">
+                {% endwith %}
+                <h6>{{ post.author }}</h6>
+                <br>
+                <h6>{{ post.author.groups.all.0 }}</h6>
+            </div>
+            
+            <div class="col-12 col-md-10 align-self-start">
+                <p>{{ post.text }}</p>
+            </div>
+            <div class="offset-8 col-4">
+                <ul class="post-moderation">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+                    Edit
+                    </button>
+                    <button onclick="moderationModal('Delete', '{{ post.id }}')" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+                    Delete
+                    </button>
+                </ul>
+            </div>
+            <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Are you sure?</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            This action could be irreversible!
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <a type="button" class="btn btn-danger">Confirm</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
-        {% endfor %}
-
-        {% if user.is_authenticated %}
-            <form method="POST">
-                {% csrf_token %}
-                {{ form }}
-                <input type="submit" value="POST" style="margin-top: 10px;" class="col-md-2 offset-md-0 offset-2 col-8 btn btn-outline-success title-button">
-            </form>
-        {% endif %}
-    </div>
+        </div>
+        <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
+    {% endfor %}
+    {% if user.is_authenticated %}
+        <form method="POST">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="POST" style="margin-top: 10px;" class="col-md-2 offset-md-0 offset-2 col-8 btn btn-outline-success title-button">
+        </form>
+    {% endif %}
+</div>
 {% endblock %}

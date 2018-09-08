@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.password_validation import validate_password
@@ -62,7 +62,7 @@ def view_untitled_objects(model_type, id):
         # TODO: add some error
 
         return redirect("/forums")
-    return redirect(str(obj.id) + "/" + obj_to_url_string(obj))
+    return redirect("../" + str(id) + "/" + obj_to_url_string(obj))
 
 def view_titled_objects(request, model_type, related_model, id, title, template_name, output_name):
     try: 
@@ -109,6 +109,17 @@ def view_forum_thread(request, id, title):
         ForumPost.objects.create(text=text, author=request.user, thread=ForumThread.objects.get(id=id), date=datetime.now())
 
     return view_titled_objects(request, ForumThread, ForumPost, id, title, 'forum_thread', 'posts')
+
+def delete_forum_post(request, thread_id, post_id):
+    if request.user.has_perm('denouement.delete_forumpost'):
+        thread = ForumThread.objects.get(id=thread_id)
+        post = ForumPost.objects.get(id=post_id, thread=thread)
+        post.delete()
+        return redirect("../../")
+    else:
+        # Add a thing that says no perms
+        return HttpResponseForbidden()
+
 
 def sign_in(request):
     if request.user.is_authenticated:

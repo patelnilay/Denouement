@@ -5,6 +5,8 @@
 body {
     font-family: 'Montserrat';
     background-color: #130f40;
+    color: white;
+    word-wrap: break-word;
 }
 
 #top_container {
@@ -106,6 +108,3 @@ p {
     color: white;
 }
 
-* {
-    word-wrap: break-word;
-}

@@ -96,6 +96,10 @@ body {
     padding-right: 6px;
 }
 
+.modal-content {
+    color: black;
+}
+
 h6 {
     color: white;
 }

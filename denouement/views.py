@@ -15,8 +15,9 @@ from .models import ForumCategory, ForumThread, ForumPost
 import re
 
 def index(request):
-    success = request.session.pop('alert', None)
-    return render(request, 'denouement/index.html', {'success': success})
+    #success = request.session.pop('alert', None)
+    #return render(request, 'denouement/index.html', {'success': success})
+    return redirect('/forums')
 
 def obj_to_url_string(obj):
     return re.sub("[^0-9a-zA-Z_-]+", "",obj.title.replace(' ', '-').lower())
@@ -28,7 +29,7 @@ def forums(request):
     for category in categories:
         category.url = obj_to_url_string(category) #category.title.replace(' ', '-').lower()
 
-    return render(request, 'denouement/forums_index.html', {'categories': categories})
+    return render(request, 'denouement/index.html', {'categories': categories})
 
 @login_required
 def post_thread(request, category_id):

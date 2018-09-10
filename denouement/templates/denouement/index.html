@@ -1,11 +1,25 @@
 {% extends 'denouement/base.html' %}
 
 {% block content %}
-    <div class="container" id="top_container">
-        <h1 id="title">Welcome to ___'s Denouement</h1>
-        <div class="col-12">
-            <a href="/forums" type="button" class="col-md-2 offset-md-4 col-8 offset-2 btn btn-outline-primary title-button">Forums</a>
-            <a href="/tickets"type="button" class="col-md-2 offset-md-0 offset-2 col-8 btn btn-outline-success title-button">Tickets</a>
-        </div>
+    <div class="container category-list">
+        <h1 class="list-title">Forums</h1>
+        {% for category in categories %}
+            <div class="row align-items-center no-margin master-row">
+                <div class="col-12 no-padding">
+                    <div class="col-12 col-sm-12 col-md-9 no-padding">
+                        <a href="categories/{{ category.id }}"><h4>{{ category.title }}</h4></a>
+                    </div>
+
+                    <div class="col-12 no-padding">
+                        <h6>{{ category.subtitle }}</h6>
+                    </div>
+                </div> 
+                <!--
+                <div class="d-none d-md-block offset-md-2 col-md-2">
+                    <h6 class="no-margin">LATEST POST PLACEHOLDER</h6>
+                </div>
+                -->
+            </div>
+        {% endfor %}
     </div>
 {% endblock %}

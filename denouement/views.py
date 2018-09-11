@@ -151,7 +151,6 @@ def delete_forum_post(request, thread_id, post_id):
         # Add a thing that says no perms
         return HttpResponseForbidden()
 
-
 def sign_in(request):
     if request.user.is_authenticated:
         return redirect('/account')
@@ -226,6 +225,7 @@ def sign_out(request):
     request.session['alert'] = 'You\'ve successfully logged out'
     return redirect('/')
 
+@login_required
 def view_account(request):
     alert = request.session.pop('alert', None)
     form = ImageForm()

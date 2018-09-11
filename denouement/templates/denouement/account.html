@@ -13,7 +13,7 @@
             <img class="card-img-top" src="{{img_url}}" alt="Card image cap">
             <div class="card-body">
                 <h5 class="card-title">{{request.user}}</h5>
-                <p class="card-text">I'm bad at ____</p>
+                <p class="card-text">{{ user.groups.all.0 }}</p>
             </div>
             <form method="post" enctype="multipart/form-data" action="/account/upload">
                 {% csrf_token %}

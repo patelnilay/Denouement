@@ -104,7 +104,7 @@ def view_titled_objects(request, model_type, related_model, id, title, template_
 
     # We only want alphanumeric and hyphens in URL's
     if title != re.sub("[^0-9a-zA-Z_-]+", "",obj.title.replace(' ', '-').lower()):
-        return redirect("../" + str(obj.id) + "/" + obj_to_url_string(obj))
+        return redirect("../" + obj_to_url_string(obj))
 
     desired_objs = None
     parent_name = None

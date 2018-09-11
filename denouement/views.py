@@ -43,10 +43,10 @@ def post_thread(request, category_id):
 
     forms = [ThreadForm(), PostForm()]
 
+    # TODO: Look at the Django way of not repeating something like this
     if text == None or title == None or text[0].isspace() or title[0].isspace():
         return render(request, 'denouement/forum_post_thread.html', {'forms': forms})
  
-
     if request.method == "POST":
         date = datetime.now()
         thread = ForumThread.objects.create(title=title, category=category, author=request.user, date=date)
@@ -55,6 +55,36 @@ def post_thread(request, category_id):
 
 
     return render(request, 'denouement/forum_post_thread.html', {'forms': forms})
+
+@login_required
+def edit_forum_post(request, thread_id, post_id):
+    form = PostForm()
+
+    if request.method == "POST":   
+        # TODO: Allow users to edit their own posts
+        if request.user.has_perm('denouement.change_forumpost'):
+            try:
+                thread = ForumThread.objects.get(id=thread_id)
+            except ForumPost.DoesNotExist:
+                return redirect('forums')
+
+            try:
+                post = ForumPost.objects.get(thread=thread, id=post_id)
+            except ForumPost.DoesNotExist:
+                return redirect('forums')
+
+            text = request.POST.get('text', None)
+
+            # TODO: Look at the Django way of not repeating something like this
+            if text == None or text[0].isspace():
+                return render(request, 'denouement/forum_post_thread.html', {'forms': [form]})
+
+            post.text = text
+            post.save()
+
+            return redirect('../../')
+
+    return render(request, 'denouement/forum_post_thread.html', {'forms': [form]})
 
 def view_untitled_objects(model_type, id):
     try: 

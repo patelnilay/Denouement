@@ -19,10 +19,10 @@
             <div class="offset-8 col-4">
                 {% if user.groups.all.0.name|lower == 'admin' %}
                     <ul class="post-moderation">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+                        <button onclick="moderationModal('edit', '{{ post.id }}')" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
                         Edit
                         </button>
-                        <button onclick="moderationModal('Delete', '{{ post.id }}')" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+                        <button onclick="moderationModal('delete', '{{ post.id }}')" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
                         Delete
                         </button>
                     </ul>
@@ -32,7 +32,7 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLongTitle">Are you sure?</h5>
+                            <h5 class="modal-title" id="exampleModalLongTitle">Post Moderation</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>

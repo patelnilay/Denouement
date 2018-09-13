@@ -1,5 +1,6 @@
 from django.test import TestCase
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
+
 
 class SignUpViewTests(TestCase):
 
@@ -36,5 +37,16 @@ class SignUpViewTests(TestCase):
             {'username': 'test123', 'password': 'test101@!', 'email': 'abc@test.com'})
 
         self.assertTemplateUsed(duplicate_email_sign_up_response, 'denouement/sign_up.html')
+
+
+class SignInViewTests(TestCase):
+    def setUp(self):
+        user = User.objects.create_user(username='test', password='test123!@')
+
+    def test_username_case_insensitive(self):
+        sign_in_response = self.client.post('/account/signin/',
+            {'username': 'TeSt', 'password': 'test123!@'}, follow=True)
+
+        self.assertTrue(sign_in_response.context['user'].is_authenticated)
 
 

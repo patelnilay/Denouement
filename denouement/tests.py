@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import Group, User
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class SignUpViewTests(TestCase):
@@ -8,7 +9,7 @@ class SignUpViewTests(TestCase):
     def setUp(self):
         default_user_group = Group.objects.get_or_create(name='User')
 
-    # Ensure the backend sees duplicate information and prompts user to change desired login credentials
+    # Duplication tests ------------------------------------------------------------
     def test_denies_duplicate_username(self):
         sign_up_response = self.client.post('/account/signup/', 
             {'username': 'test', 'password': 'abcd123!', 'email': 'test@test.com'})
@@ -16,9 +17,8 @@ class SignUpViewTests(TestCase):
         duplicate_username_sign_up_response = self.client.post('/account/signup/', 
             {'username': 'test', 'password': 'test101@!', 'email': 'test123@test.com'})
         
-        self.assertTemplateUsed(duplicate_username_sign_up_response, 'denouement/sign_up.html')
+        self.assertRaises(ObjectDoesNotExist, User.objects.get, email='test123@test.com')
 
-    # Ensure the backend denies identical usernames regardless of letter case and reprompts entry of desired credentials
     def test_denies_duplicate_username_case_insensitive(self):
         sign_up_response = self.client.post('/account/signup/', 
             {'username': 'test', 'password': 'abcd123!', 'email': 'test@test.com'})
@@ -26,17 +26,17 @@ class SignUpViewTests(TestCase):
         duplicate_username_case_insensitive_sign_up_response = self.client.post('/account/signup/', 
             {'username': 'tEsT', 'password': 'test101@!', 'email': 'test123@test.com'})
 
-        self.assertTemplateUsed(duplicate_username_case_insensitive_sign_up_response, 'denouement/sign_up.html')
-    
-    # Ensure the backend sees duplicate information and prompts user to change desired login credentials
+        self.assertRaises(ObjectDoesNotExist, User.objects.get, email='test123@test.com')
+
     def test_denies_duplicate_email(self):
         sign_up_response = self.client.post('/account/signup/', 
             {'username': 'test', 'password': 'abcd123!', 'email': 'abc@test.com'})
 
         duplicate_email_sign_up_response = self.client.post('/account/signup/', 
             {'username': 'test123', 'password': 'test101@!', 'email': 'abc@test.com'})
-
-        self.assertTemplateUsed(duplicate_email_sign_up_response, 'denouement/sign_up.html')
+    
+        self.assertRaises(ObjectDoesNotExist, User.objects.get, username='test123')
+    # ------------------------------------------------------------------------------
 
 
 class SignInViewTests(TestCase):

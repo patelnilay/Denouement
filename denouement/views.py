@@ -257,4 +257,4 @@ def upload_image(request):
         for chunk in request.FILES['image'].chunks():
             destination.write(chunk)
 
-    return redirect('../account')
+    return redirect('view_account')

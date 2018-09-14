@@ -15,7 +15,7 @@
                 <h5 class="card-title">{{request.user}}</h5>
                 <p class="card-text">{{ user.groups.all.0 }}</p>
             </div>
-            <form method="post" enctype="multipart/form-data" action="/account/upload">
+            <form method="post" enctype="multipart/form-data" action="/account/upload/">
                 {% csrf_token %}
                 <div class="custom-file col-sm-12 col-md-12">
                     <input type="file" class="custom-file-input" id="customFile" name="image">

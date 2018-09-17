@@ -31,7 +31,7 @@ def forums(request):
 
     return render(request, 'denouement/index.html', {'categories': categories})
 
-@login_required
+@login_required(login_url="/forums/account/signin")
 def post_thread(request, category_id):
     try:
         category = ForumCategory.objects.get(id=category_id)
@@ -56,7 +56,7 @@ def post_thread(request, category_id):
 
     return render(request, 'denouement/forum_post_thread.html', {'forms': forms})
 
-@login_required
+@login_required(login_url="/forums/account/signin")
 def edit_forum_post(request, thread_id, post_id):
     form = PostForm()
 
@@ -225,15 +225,27 @@ def sign_out(request):
     request.session['alert'] = 'You\'ve successfully logged out'
     return redirect('/')
 
-@login_required
+@login_required(login_url="/forums/account/signin")
 def view_account(request):
     alert = request.session.pop('alert', None)
     form = ImageForm()
+
+    # TODO: Look at not doing this
     img_url = '/media/' + request.user.username + '.jpg'
     return render(request, 'denouement/account.html', {'form': form, 'img_url': img_url, 'alert': alert})
 
+def view_user_profile(request, username):
+    user = User.objects.get(username=username)
+
+    if user.username == request.user.username:
+        return redirect('view_account')
+
+    # TODO: Look at not doing this
+    img_url = '/media/' + user.username + '.jpg'
+    return render(request, 'denouement/account.html', {'img_url': img_url, 'selected_user': user})
+
 @require_http_methods(['POST'])
-@login_required
+@login_required(login_url="/forums/account/signin")
 def upload_image(request):
     # we're going to need to look at security
     # file type

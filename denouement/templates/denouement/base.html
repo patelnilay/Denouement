@@ -36,12 +36,12 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                             {% if user.is_authenticated %}
-                                <a class="dropdown-item" href="/account">My Account</a>
+                                <a class="dropdown-item" href="/forums/account">My Account</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="/account/signout">Sign Out</a>
+                                <a class="dropdown-item" href="/forums/account/signout">Sign Out</a>
                             {% else %}
-                                <a class="dropdown-item" href="/account/signin">Sign in</a>
-                                <a class="dropdown-item" href="/account/signup">Sign Up</a>
+                                <a class="dropdown-item" href="/forums/account/signin">Sign in</a>
+                                <a class="dropdown-item" href="/forums/account/signup">Sign Up</a>
                             {% endif %}     
                         </div>
                     </li>

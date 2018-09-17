@@ -10,23 +10,36 @@
 
     <div class="container">
         <div class="card col-sm-12 offset-md-2 col-md-8 col-lg-5 offset-lg-0" style="color: black; margin-top: 10%;">
-            <img class="card-img-top" src="{{img_url}}" alt="Card image cap">
+            {% if selected_user %}
+                <img class="card-img-top" src= {{"/media/"|add:selected_user.username|add:".jpg" }} alt="Card image cap">
+            {% else %}
+                <img class="card-img-top" src= {{"/media/"|add:user.username|add:".jpg" }} alt="Card image cap">
+            {% endif %}
+            
+            
             <div class="card-body">
-                <h5 class="card-title">{{request.user}}</h5>
-                <p class="card-text">{{ user.groups.all.0 }}</p>
+                {% if selected_user %}
+                    <h5 class="card-title">{{ selected_user.username }}</h5>
+                    <p class="card-text">{{ selected_user.groups.all.0 }}</p>
+                {% else %}
+                    <h5 class="card-title">{{ user.username }}</h5>
+                    <p class="card-text">{{ user.groups.all.0 }}</p>
+                {% endif %}
             </div>
-            <form method="post" enctype="multipart/form-data" action="/account/upload/">
-                {% csrf_token %}
-                <div class="custom-file col-sm-12 col-md-12">
-                    <input type="file" class="custom-file-input" id="customFile" name="image">
-                    <label class="custom-file-label" for="customFile">Upload image</label>
-                </div>
-                <input type="submit" class="btn btn-outline-primary title-button login-button col-md-4 col-12" value="Upload">
-                <label class="custom-file">
-                    <input type="file" id="file" class="custom-file-input">
-                    <span class="custom-file-control"></span>
-                </label>
-            </form>
+            {% if form %}
+                <form method="post" enctype="multipart/form-data" action="/account/upload/">
+                    {% csrf_token %}
+                    <div class="custom-file col-sm-12 col-md-12">
+                        <input type="file" class="custom-file-input" id="customFile" name="image">
+                        <label class="custom-file-label" for="customFile">Upload image</label>
+                    </div>
+                    <input type="submit" class="btn btn-outline-primary title-button login-button col-md-4 col-12" value="Upload">
+                    <label class="custom-file">
+                        <input type="file" id="file" class="custom-file-input">
+                        <span class="custom-file-control"></span>
+                    </label>
+                </form>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

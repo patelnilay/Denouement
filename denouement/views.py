@@ -20,7 +20,8 @@ def index(request):
     return redirect('/forums')
 
 def obj_to_url_string(obj):
-    return re.sub("[^0-9a-zA-Z-]+", "",obj.title.replace(' ', '-').lower())
+    obj.title = re.sub(' +', ' ', obj.title)
+    return re.sub("[^0-9a-zA-Z-]+", "", obj.title.replace(' ', '-').lower())
 
 def forums(request):
     categories = ForumCategory.objects.all()
@@ -103,6 +104,7 @@ def view_titled_objects(request, model_type, related_model, id, title, template_
         return redirect("/forums")
 
     # We only want alphanumeric and hyphens in URL's
+    obj.title = re.sub(' +', ' ', obj.title)
     if title != re.sub("[^0-9a-zA-Z-]+", "",obj.title.replace(' ', '-').lower()):
         return redirect("../" + obj_to_url_string(obj))
 

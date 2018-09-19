@@ -27,7 +27,7 @@
                 {% endif %}
             </div>
             {% if form %}
-                <form method="post" enctype="multipart/form-data" action="/account/upload/">
+                <form method="post" enctype="multipart/form-data" action="/forums/account/upload/">
                     {% csrf_token %}
                     <div class="custom-file col-sm-12 col-md-12">
                         <input type="file" class="custom-file-input" id="customFile" name="image">

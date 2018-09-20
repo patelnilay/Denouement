@@ -18,3 +18,9 @@ class ForumPost(models.Model):
     thread = models.ForeignKey(ForumThread, on_delete=models.CASCADE, related_name='thread')
     upvotes = models.IntegerField(default=0)
     date = models.DateTimeField()
+
+class ProfileComment(models.Model):
+    text = models.CharField(max_length=60000)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comment_author')
+    profile_owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profile_owner')
+    date = models.DateTimeField()

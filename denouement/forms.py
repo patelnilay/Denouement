@@ -50,6 +50,16 @@ class PostForm(forms.Form):
         )
     )
 
+class CommentForm(forms.Form):
+    text = forms.CharField(max_length=60000,
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control',
+                'rows': 1
+            }
+        )
+    )
+
 class ThreadForm(forms.Form):
     title = forms.CharField(max_length=100,
         widget=forms.TextInput(

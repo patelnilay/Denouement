@@ -9,8 +9,8 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from PIL import Image
 
-from .forms import SignInForm, SignUpForm, ImageForm, PostForm, ThreadForm
-from .models import ForumCategory, ForumThread, ForumPost
+from .forms import SignInForm, SignUpForm, ImageForm, PostForm, ThreadForm, CommentForm
+from .models import ForumCategory, ForumThread, ForumPost, ProfileComment
 
 import re
 
@@ -242,9 +242,22 @@ def view_user_profile(request, username):
     if user.username == request.user.username:
         return redirect('view_account')
 
+    form = CommentForm()
+
+    comments = ProfileComment.objects.filter(profile_owner=user)
+
     # TODO: Look at not doing this
     img_url = '/media/' + user.username + '.jpg'
-    return render(request, 'denouement/account.html', {'img_url': img_url, 'selected_user': user})
+
+    if request.method == 'POST':
+        text = request.POST.get('text', None)
+
+        if text and user.is_authenticated:
+            comment = ProfileComment.objects.create(text=text, author=request.user, profile_owner=user, date=datetime.now())
+            comment.save()
+
+    return render(request, 'denouement/account.html', {'img_url': img_url, 'selected_user': user, 
+        'form': form, 'comments': comments})
 
 @require_http_methods(['POST'])
 @login_required(login_url="/forums/account/signin")

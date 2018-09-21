@@ -11,23 +11,14 @@
     <div class="container">
         <div class="row" style="margin-top: 10%;">
             <div class="card col-md-12 col-lg-5 offset-lg-0" style="height: 25%;">
-                {% if selected_user %}
-                    <img class="card-img-top" src= {{"/media/"|add:selected_user.username|add:".jpg" }} alt="Card image cap">
-                {% else %}
-                    <img class="card-img-top" src= {{"/media/"|add:user.username|add:".jpg" }} alt="Card image cap">
-                {% endif %}
+                <img class="card-img-top" src= {{"/media/"|add:selected_user.username|add:".jpg" }} alt="Card image cap">
                 
                 
                 <div class="card-body">
-                    {% if selected_user %}
-                        <h5 class="card-title">{{ selected_user.username }}</h5>
-                        <p class="card-text">{{ selected_user.groups.all.0 }}</p>
-                    {% else %}
-                        <h5 class="card-title">{{ user.username }}</h5>
-                        <p class="card-text">{{ user.groups.all.0 }}</p>
-                    {% endif %}
+                    <h5 class="card-title">{{ selected_user.username }}</h5>
+                    <p class="card-text">{{ selected_user.groups.all.0 }}</p>
                 </div>
-                {% if form %}
+                {% if forms.image_form %}
                     <form method="post" enctype="multipart/form-data" action="/forums/account/upload/">
                         {% csrf_token %}
                         <div class="custom-file col-sm-12 col-md-12">
@@ -59,11 +50,13 @@
                     </div>
                 {% endfor %}
 
-                <form method="POST">
-                    {% csrf_token %}
-                    {{ form }}
-                    <input type="submit" value="POST" style="margin-top: 10px;" class="col-md-2 offset-md-0 offset-2 col-8 btn btn-outline-success title-button">
-                </form>
+                {% if forms.comment_form %}
+                    <form method="POST" action="/forums/user/{{ selected_user }}">
+                        {% csrf_token %}
+                        {{ forms.comment_form }}
+                        <input type="submit" value="POST" style="margin-top: 10px;" class="col-md-2 offset-md-0 offset-2 col-8 btn btn-outline-success title-button">
+                    </form>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -225,24 +225,21 @@ def sign_up(request):
 def sign_out(request):
     logout(request)
     request.session['alert'] = 'You\'ve successfully logged out'
-    return redirect('/')
-
-@login_required(login_url="/forums/account/signin")
-def view_account(request):
-    alert = request.session.pop('alert', None)
-    form = ImageForm()
-
-    # TODO: Look at not doing this
-    img_url = '/media/' + request.user.username + '.jpg'
-    return render(request, 'denouement/account.html', {'form': form, 'img_url': img_url, 'alert': alert})
+    return redirect('/')   
 
 def view_user_profile(request, username):
-    user = User.objects.get(username=username)
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return redirect('/forums')
 
-    if user.username == request.user.username:
-        return redirect('view_account')
+    comment_form = CommentForm()
 
-    form = CommentForm()
+    # We set this later on if the user should be editing the profile of the selected user
+    image_form = None
+    
+    if user == request.user:    
+        image_form = ImageForm()
 
     comments = ProfileComment.objects.filter(profile_owner=user)
 
@@ -257,7 +254,7 @@ def view_user_profile(request, username):
             comment.save()
 
     return render(request, 'denouement/account.html', {'img_url': img_url, 'selected_user': user, 
-        'form': form, 'comments': comments})
+        'forms': {'comment_form': comment_form, 'image_form': image_form}, 'comments': comments})
 
 @require_http_methods(['POST'])
 @login_required(login_url="/forums/account/signin")
@@ -271,17 +268,18 @@ def upload_image(request):
         img = Image.open(request.FILES['image'])
     except OSError:
         request.session['alert'] = 'Invalid filetype!'
-        return redirect('../account')
+        return redirect('/forums/user/' + request.user.username)
 
     try:
         img.verify()
         request.session['alert'] = 'Image uploaded!'
     except Exception:
         request.session['alert'] = 'Invalid image!'
-        return redirect('../account')
+        return redirect('/forums/user/' + request.user.username)
 
     with open('media/' + request.user.username + '.jpg', 'wb+') as destination:
         for chunk in request.FILES['image'].chunks():
             destination.write(chunk)
 
-    return redirect('view_account')
+    return redirect('/forums/user/' + request.user.username)
+

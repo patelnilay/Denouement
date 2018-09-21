@@ -55,11 +55,5 @@ class ViewUserProfileTests(TestCase):
         self.user = User.objects.create_user(username='test', password='test123!@')
         self.client.force_login(self.user)
 
-    # When a user views their own profile it should redirect them to their
-    # account management page
-    def test_account_redirect(self):
-        view_profile_response = self.client.get('/forums/user/' + self.user.username, follow=False)
-        self.assertRedirects(view_profile_response, '/forums/account/')
-
 
 

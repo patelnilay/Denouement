@@ -14,7 +14,6 @@ urlpatterns = [
     path('forums/thread/<int:thread_id>/<int:post_id>/edit/', views.edit_forum_post, name='edit_forum_post'),    
     path('forums/thread/<int:id>/<title>/', views.view_forum_thread, name='forum_thread_titled'),
     path('forums/post/<category_id>/', views.post_thread, name='post_thread'),
-    path('forums/account/', views.view_account, name='view_account'),
     path('forums/account/signup/', views.sign_up, name='sign_up'),
     path('forums/account/signin/', views.sign_in, name='sign_in'),
     path('forums/account/signout/', views.sign_out, name='sign_out'),

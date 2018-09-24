@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseForbidden
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Group
@@ -145,10 +145,21 @@ def view_forum_thread(request, id, title):
 
 def delete_forum_post(request, thread_id, post_id):
     if request.user.has_perm('denouement.delete_forumpost'):
-        thread = ForumThread.objects.get(id=thread_id)
-        post = ForumPost.objects.get(id=post_id, thread=thread)
+        thread = get_object_or_404(ForumThread, id=thread_id)
+        post = get_object_or_404(ForumPost, id=post_id, thread=thread)
         post.delete()
         return redirect("../../")
+    else:
+        # Add a thing that says no perms
+        return HttpResponseForbidden()
+
+def delete_profile_comment(request, username, comment_id):
+    user = get_object_or_404(User, username=username)
+
+    if request.user == user:
+        comment = get_object_or_404(ProfileComment, id=comment_id, profile_owner=user)
+        comment.delete()
+        return redirect("../../../")
     else:
         # Add a thing that says no perms
         return HttpResponseForbidden()

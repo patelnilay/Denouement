@@ -62,19 +62,26 @@ def edit_forum_post(request, thread_id, post_id):
 
     form = None
 
+    try:
+        thread = ForumThread.objects.get(id=thread_id)
+    except ForumPost.DoesNotExist:
+        return redirect('forums')
+
+    try:
+        post = ForumPost.objects.get(thread=thread, id=post_id)
+    except ForumPost.DoesNotExist:
+        return redirect('forums')
+
+    # We know the post and thread exist and as such we can access the text
+    # so the form has a default value
+    form = PostForm(initial={'text': post.text})
+
     # TODO: Allow users to edit their own posts
-    if request.user.has_perm('denouement.change_forumpost'):
-        try:
-            thread = ForumThread.objects.get(id=thread_id)
-        except ForumPost.DoesNotExist:
-            return redirect('forums')
+    if (not request.user.has_perm('denouement.change_forumpost') and
+        post.author != request.user):
 
-        try:
-            post = ForumPost.objects.get(thread=thread, id=post_id)
-        except ForumPost.DoesNotExist:
-            return redirect('forums')
+        return redirect('forums')
 
-        form = PostForm(initial={'text': post.text})
 
 
     if request.method == "POST":   

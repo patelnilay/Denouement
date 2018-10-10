@@ -59,21 +59,25 @@ def post_thread(request, category_id):
 
 @login_required(login_url="/forums/account/signin")
 def edit_forum_post(request, thread_id, post_id):
-    form = PostForm()
+
+    form = None
+
+    # TODO: Allow users to edit their own posts
+    if request.user.has_perm('denouement.change_forumpost'):
+        try:
+            thread = ForumThread.objects.get(id=thread_id)
+        except ForumPost.DoesNotExist:
+            return redirect('forums')
+
+        try:
+            post = ForumPost.objects.get(thread=thread, id=post_id)
+        except ForumPost.DoesNotExist:
+            return redirect('forums')
+
+        form = PostForm(initial={'text': post.text})
+
 
     if request.method == "POST":   
-        # TODO: Allow users to edit their own posts
-        if request.user.has_perm('denouement.change_forumpost'):
-            try:
-                thread = ForumThread.objects.get(id=thread_id)
-            except ForumPost.DoesNotExist:
-                return redirect('forums')
-
-            try:
-                post = ForumPost.objects.get(thread=thread, id=post_id)
-            except ForumPost.DoesNotExist:
-                return redirect('forums')
-
             text = request.POST.get('text', None)
 
             # TODO: Look at the Django way of not repeating something like this

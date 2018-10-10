@@ -78,16 +78,16 @@ def edit_forum_post(request, thread_id, post_id):
 
 
     if request.method == "POST":   
-            text = request.POST.get('text', None)
+        text = request.POST.get('text', None)
 
-            # TODO: Look at the Django way of not repeating something like this
-            if text == None or text[0].isspace():
-                return render(request, 'denouement/forum_post_thread.html', {'forms': [form]})
+        # TODO: Look at the Django way of not repeating something like this
+        if text == None or text[0].isspace():
+            return render(request, 'denouement/forum_post_thread.html', {'forms': [form]})
 
-            post.text = text
-            post.save()
+        post.text = text
+        post.save()
 
-            return redirect('../../')
+        return redirect('../../')
 
     return render(request, 'denouement/forum_post_thread.html', {'forms': [form]})
 

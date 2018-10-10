@@ -268,7 +268,7 @@ def view_user_profile(request, username):
     # TODO: Look at not doing this
     img_url = '/media/' + user.username + '.jpg'
 
-    if request.method == 'POST':
+    if request.method == 'POST' and request.user.is_authenticated:
         text = request.POST.get('text', None)
 
         if text and user.is_authenticated:

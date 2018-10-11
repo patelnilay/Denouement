@@ -110,5 +110,6 @@ body {
     border-radius: 5px;
 }
 
-
-
+.card {
+    color: black;
+}

@@ -286,6 +286,10 @@ def upload_image(request):
     # file size
     # (a lot of stuff will be done by a production web server i.e Apache and it's URL specific upload sizes etc)
     # more stuff...
+
+    if not request.FILES:
+        return redirect("/forums/user/" + request.user.username)
+
     try:
         img = Image.open(request.FILES['image'])
     except OSError:

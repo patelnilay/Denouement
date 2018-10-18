@@ -1,4 +1,10 @@
 {% extends 'denouement/base.html' %}
+{% load static %}
+
+{% block script %}
+    <script type="text/javascript" src="{% static 'denouement/formatting.js' %}"></script>
+{% endblock %}
+
 {% block content %}
     <div class="container category-list">
         <h1 class="list-title">{{ parent_name }}</h1>
@@ -14,7 +20,7 @@
             </div>
             
             <div class="col-12 col-md-10 align-self-start">
-                <p>{{ post.text|linebreaks }}</p>
+                <p class="post-text">{{ post.text }}</p>
             </div>
             <div class="offset-8 col-4">
                 <ul class="post-moderation">

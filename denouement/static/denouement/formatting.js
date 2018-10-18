@@ -9,6 +9,11 @@ function formatLine(line, charToFind)
 
         if (charToFind == "*")
         {
+            tag = "em";
+        }
+
+        if (charToFind == "**")
+        {
             tag = "strong";
         }
 
@@ -20,11 +25,11 @@ function formatLine(line, charToFind)
 
         if (matchCount == 0)
         {
-            line = line.replace("*",  "<" + tag + ">");
+            line = line.replace(charToFind,  "<" + tag + ">");
         }
         else if (matchCount == 1)
         {
-            line = line.replace("*", "</" + tag + ">");
+            line = line.replace(charToFind, "</" + tag + ">");
         }
 
         matchCount++;
@@ -66,7 +71,9 @@ window.addEventListener("load", function()
                 return;
             }
 
+            line = formatLine(line, "**");
             line = formatLine(line, "*");
+
             post.innerHTML += line + "<br>";
         })
     }

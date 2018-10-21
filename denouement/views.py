@@ -13,6 +13,7 @@ from .forms import SignInForm, SignUpForm, ImageForm, PostForm, ThreadForm, Comm
 from .models import ForumCategory, ForumThread, ForumPost, ProfileComment
 
 import re
+import urllib.request
 
 def index(request):
     #success = request.session.pop('alert', None)
@@ -240,6 +241,8 @@ def sign_up(request):
 
             alert = 'Congratulations, you registered an account!'
             request.session['alert'] = alert
+
+            urllib.request.urlretrieve('https://api.adorable.io/avatars/285/'+ user.username + '.png', 'media/' + user.username + '.jpg')
 
             return redirect('/')
     return render(request, 'denouement/sign_up.html', {'form': form})

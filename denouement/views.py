@@ -216,7 +216,10 @@ def sign_up(request):
 
         if not username or not password or not email:
             return render(request, 'denouement/sign_up.html', {'form': form, 'error': "Error"})
-        
+
+        if not username.isalnum():
+            return render(request, 'denouement/sign_up.html', {'form': form, 'error': 'Your username should only consist of numbers and letters'})
+
         # Maybe make this into an array and serve an array of errors 
         error = None
 

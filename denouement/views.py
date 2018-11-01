@@ -15,6 +15,13 @@ from .models import ForumCategory, ForumThread, ForumPost, ProfileComment
 import re
 import urllib.request
 
+def is_banned(user):
+    for group in user.groups.all():
+        if group.name  == 'Banned':
+            return True
+
+    return False
+
 def index(request):
     #success = request.session.pop('alert', None)
     #return render(request, 'denouement/index.html', {'success': success})
@@ -35,6 +42,9 @@ def forums(request):
 
 @login_required(login_url="/forums/account/signin")
 def post_thread(request, category_id):
+    if is_banned(request.user):
+        return HttpResponseForbidden("You are banned")
+
     try:
         category = ForumCategory.objects.get(id=category_id)
     except ForumCategory.DoesNotExist:
@@ -60,6 +70,8 @@ def post_thread(request, category_id):
 
 @login_required(login_url="/forums/account/signin")
 def edit_forum_post(request, thread_id, post_id):
+    if is_banned(request.user):
+        return HttpResponseForbidden("You are banned")
 
     form = None
 
@@ -82,8 +94,6 @@ def edit_forum_post(request, thread_id, post_id):
         post.author != request.user):
 
         return redirect('forums')
-
-
 
     if request.method == "POST":   
         text = request.POST.get('text', None)
@@ -150,22 +160,30 @@ def view_forum_thread_untitled(request, id):
 def view_forum_thread(request, id, title):
     # Probably tell the user they don't have permission
     if request.method == "POST" and request.user.is_authenticated:
+        if is_banned(request.user):
+            return HttpResponseForbidden("You are banned")
+
         text = request.POST.get('text', None)
         ForumPost.objects.create(text=text, author=request.user, thread=ForumThread.objects.get(id=id), date=datetime.now())
 
     return view_titled_objects(request, ForumThread, ForumPost, id, title, 'forum_thread', 'posts')
 
 def delete_forum_post(request, thread_id, post_id):
+    if is_banned(request.user):
+        return HttpResponseForbidden("You are banned")
+
     if request.user.has_perm('denouement.delete_forumpost'):
         thread = get_object_or_404(ForumThread, id=thread_id)
         post = get_object_or_404(ForumPost, id=post_id, thread=thread)
         post.delete()
         return redirect("../../")
     else:
-        # Add a thing that says no perms
-        return HttpResponseForbidden()
+        return HttpResponseForbidden("You do not have the permissions to delete this")
 
 def delete_profile_comment(request, username, comment_id):
+    if is_banned(request.user):
+        return HttpResponseForbidden("You are banned")
+
     user = get_object_or_404(User, username=username)
 
     if request.user == user:
@@ -173,8 +191,7 @@ def delete_profile_comment(request, username, comment_id):
         comment.delete()
         return redirect("../../../")
     else:
-        # Add a thing that says no perms
-        return HttpResponseForbidden()
+        return HttpResponseForbidden("You do not have the permissions to delete this")
 
 def sign_in(request):
     if request.user.is_authenticated:
@@ -281,8 +298,40 @@ def view_user_profile(request, username):
             comment = ProfileComment.objects.create(text=text, author=request.user, profile_owner=user, date=datetime.now())
             comment.save()
 
+    if is_banned(user):
+        user.banned = True
+
     return render(request, 'denouement/account.html', {'img_url': img_url, 'selected_user': user, 
         'forms': {'comment_form': comment_form, 'image_form': image_form}, 'comments': comments})
+
+@login_required(login_url="/forums/account/signin")
+def user_moderation(request, username, action):
+    # Strip banned users of staff ranks?
+    if is_banned(request.user):
+        return HttpResponseForbidden("You are banned")
+
+    is_admin = False
+
+    for group in request.user.groups.all():
+        if group.name.lower() == 'admin':
+            is_admin = True
+            break
+
+    if not is_admin:
+        return HttpResponseForbidden("You do not have the permissions required to perform user moderation")
+
+    targeted_user = get_object_or_404(User, username__iexact=username)
+
+    banned_user_group = Group.objects.get(name='Banned')
+    
+    if action == 'ban':
+        banned_user_group.user_set.add(targeted_user)
+    elif action == 'unban':
+        banned_user_group.user_set.remove(targeted_user)
+    else:
+        return HttpResponseForbidden()
+
+    return redirect("../" + targeted_user.username)
 
 @require_http_methods(['POST'])
 @login_required(login_url="/forums/account/signin")
@@ -292,6 +341,8 @@ def upload_image(request):
     # file size
     # (a lot of stuff will be done by a production web server i.e Apache and it's URL specific upload sizes etc)
     # more stuff...
+    if is_banned(request.user):
+        return HttpResponseForbidden("You are banned")
 
     if not request.FILES:
         return redirect("/forums/user/" + request.user.username)
@@ -314,4 +365,3 @@ def upload_image(request):
             destination.write(chunk)
 
     return redirect('/forums/user/' + request.user.username)
-

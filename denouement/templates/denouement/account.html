@@ -13,7 +13,12 @@
                 
                 <div class="card-body">
                     <h5 class="card-title">{{ selected_user.username }}</h5>
-                    <p class="card-text">{{ selected_user.groups.all.0 }}</p>
+                    {% if selected_user.banned %}
+                        <p class="card-text">Banned</p>
+                    {% else %}
+                        <p class="card-text">{{ selected_user.groups.all.0 }}</p>
+                    {% endif %}
+                    
                 </div>
                 {% if forms.image_form %}
                     <form method="post" enctype="multipart/form-data" action="/forums/account/upload/">
@@ -29,6 +34,16 @@
                         </label>
                     </form>
                 {% endif %}
+
+                {% if user.groups.all.0|lower == "admin" %}
+                    {% if selected_user.banned %}
+                        <a class="btn btn-success title-button login-button col-md-4 col-12" href="unban">Unban</a>
+                    {% else %}
+                        <a class="btn btn-danger title-button login-button col-md-4 col-12" href="ban">Ban</a>
+                    {% endif %}
+                {% endif %}
+                
+
             </div>
             <div class="comment-box col-sm-12 col-md-12 col-lg-5 offset-lg-0">
                 {% for comment in comments %}

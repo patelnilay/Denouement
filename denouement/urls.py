@@ -20,5 +20,6 @@ urlpatterns = [
     path('forums/account/signin/', views.sign_in, name='sign_in'),
     path('forums/account/signout/', views.sign_out, name='sign_out'),
     path('forums/account/upload/', views.upload_image, name='upload_picture'),
+    path('forums/user/<username>/<action>', views.user_moderation, name='user_moderation')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

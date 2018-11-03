@@ -12,7 +12,12 @@
                         <img class="sm-profile-picture" src="{{ picture_url }}" alt="">
                     {% endwith %}
                     <div class="col-sm-12 col-md-9 no-padding">
-                        <a href="/forums/thread/{{ thread.id }}"><h4>{{ thread.title }}</h4></a>
+                        {% if thread.locked %}
+                            <a href="/forums/thread/{{ thread.id }}"><h4>🔒 {{ thread.title }}</h4></a>
+                        {% else %}   
+                            <a href="/forums/thread/{{ thread.id }}"><h4>{{ thread.title }}</h4></a>
+                        {% endif %}
+                        
                     </div>
 
                     <div class="col-12 col-sm-12 col-md-12 no-padding">

@@ -114,6 +114,9 @@ body {
     color: black;
 }
 
+.moderation-dropdown-btn {
+    margin-bottom: 50%;
+
 /* Stop ugly borders when clicking anchors */
 a:active, a:focus {
     outline: 0;

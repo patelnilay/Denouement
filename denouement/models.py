@@ -11,6 +11,7 @@ class ForumThread(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='thread_author')
     post_count = models.IntegerField(default=1)
     date = models.DateTimeField()
+    locked = models.BooleanField(default=False)
 
 class ForumPost(models.Model):
     text = models.CharField(max_length=60000)

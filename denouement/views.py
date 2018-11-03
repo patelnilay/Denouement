@@ -40,6 +40,18 @@ def forums(request):
 
     return render(request, 'denouement/index.html', {'categories': categories})
 
+def delete_thread(request, thread_id):
+    if not request.user.has_perm('denouement.delete_forumthread'):
+        return HttpResponseForbidden("You do not have permission to delete this thread")
+    
+    selected_thread = get_object_or_404(ForumThread, id=thread_id)
+    category_id = selected_thread.category.id
+    selected_thread.delete()
+
+
+    return redirect("/forums/categories/" + str(category_id))
+
+
 @login_required(login_url="/forums/account/signin")
 def post_thread(request, category_id):
     if is_banned(request.user):
@@ -146,7 +158,7 @@ def view_titled_objects(request, model_type, related_model, id, title, template_
 
     # TODO: Maybe raise an error incase i'm doing something dumb with the wrong model?
 
-    return render(request, 'denouement/' + template_name + '.html', {output_name: desired_objs, 'parent_name': parent_name, 'post_url': post_url, 'form': form})
+    return render(request, 'denouement/' + template_name + '.html', {output_name: desired_objs, 'parent': obj, 'post_url': post_url, 'form': form})
     
 def view_forum_category_untitled(request, id):
     return view_untitled_objects(ForumCategory, id)
@@ -160,14 +172,21 @@ def view_forum_thread_untitled(request, id):
 def view_forum_thread(request, id, title):
     # Probably tell the user they don't have permission
     if request.method == "POST" and request.user.is_authenticated:
+
         if is_banned(request.user):
             return HttpResponseForbidden("You are banned")
 
+        thread = ForumThread.objects.get(id=id)
+
+        if thread.locked:
+            return HttpResponseForbidden("This thread is locked")
+
         text = request.POST.get('text', None)
-        ForumPost.objects.create(text=text, author=request.user, thread=ForumThread.objects.get(id=id), date=datetime.now())
+        ForumPost.objects.create(text=text, author=request.user, thread=thread, date=datetime.now())
 
     return view_titled_objects(request, ForumThread, ForumPost, id, title, 'forum_thread', 'posts')
 
+@login_required(login_url="/forums/account/signin")
 def delete_forum_post(request, thread_id, post_id):
     if is_banned(request.user):
         return HttpResponseForbidden("You are banned")
@@ -180,6 +199,14 @@ def delete_forum_post(request, thread_id, post_id):
     else:
         return HttpResponseForbidden("You do not have the permissions to delete this")
 
+@login_required(login_url="/forums/account/signin")
+def lock_thread(request, thread_id):
+    selected_thread = get_object_or_404(ForumThread, id=thread_id)
+    selected_thread.locked = not selected_thread.locked
+    selected_thread.save()
+    return redirect('../')    
+
+@login_required(login_url="/forums/account/signin")
 def delete_profile_comment(request, username, comment_id):
     if is_banned(request.user):
         return HttpResponseForbidden("You are banned")

@@ -59,15 +59,24 @@ window.addEventListener("load", function()
 
             if (line.startsWith("# "))
             {
-                line = line.replace("# " , "")
+                line = line.replace("# ", "");
                 post.innerHTML += "<h1>" + line + "</h1>";
                 return;
             }   
 
             if (line.startsWith("## "))
             {
-                line = line.replace("## " , "")
+                line = line.replace("## ", "");
                 post.innerHTML += "<h2>" + line + "</h2>";
+                return;
+            }
+
+            if (line.startsWith("!"))
+            {
+                let startToken = line.indexOf("[") + 1;
+                let endToken = line.indexOf("]");
+                let image_url = line.slice(startToken, endToken);
+                post.innerHTML += "<img src=\"" + image_url + "\">";
                 return;
             }
 

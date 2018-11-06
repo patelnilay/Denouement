@@ -60,7 +60,7 @@
         </div>
         <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
     {% endfor %}
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and not parent.locked %}
         <form method="POST">
             {% csrf_token %}
             {{ form }}

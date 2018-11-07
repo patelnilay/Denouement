@@ -73,10 +73,22 @@ window.addEventListener("load", function()
 
             if (line.startsWith("!"))
             {
-                let startToken = line.indexOf("[") + 1;
-                let endToken = line.indexOf("]");
-                let image_url = line.slice(startToken, endToken);
-                post.innerHTML += "<img src=\"" + image_url + "\">";
+                let urlStartToken = line.indexOf("[") + 1;
+                let urlEndToken = line.indexOf("]");
+
+                let titleStartToken = line.indexOf("(") + 1;
+                let titleEndToken = line.indexOf(")");
+
+                let imageUrl = line.slice(urlStartToken, urlEndToken);
+                
+                let titleText = "";
+                if (titleStartToken > 0 && titleEndToken > 0)
+                {
+                    titleText = line.slice(titleStartToken, titleEndToken);
+                }
+
+                post.innerHTML += "<img src=\"" + imageUrl + "\">";
+                post.setAttribute("title", titleText);
                 return;
             }
 

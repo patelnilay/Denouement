@@ -76,19 +76,26 @@ window.addEventListener("load", function()
                 let urlStartToken = line.indexOf("[") + 1;
                 let urlEndToken = line.indexOf("]");
 
-                let titleStartToken = line.indexOf("(") + 1;
-                let titleEndToken = line.indexOf(")");
+                let additionalParamsStart = line.indexOf("(") + 1;
+                let additionalParmsEnd = line.indexOf(")");
 
                 let imageUrl = line.slice(urlStartToken, urlEndToken);
                 
-                let titleText = "";
-                if (titleStartToken > 0 && titleEndToken > 0)
+                let additionalParams = "";
+                if (additionalParamsStart > 0 && additionalParmsEnd > 0)
                 {
-                    titleText = line.slice(titleStartToken, titleEndToken);
+                    additionalParams = line.slice(additionalParamsStart, additionalParmsEnd);
                 }
 
-                post.innerHTML += "<img src=\"" + imageUrl + "\">";
-                post.setAttribute("title", titleText);
+                additionalParams = additionalParams.split(",");
+
+                let img = document.createElement("img");
+                img.src = imageUrl;
+                img.title = additionalParams[0];
+                img.width = additionalParams[1] || img.width;
+                img.height = additionalParams[2] || img.height;
+                post.appendChild(img);
+                
                 return;
             }
 

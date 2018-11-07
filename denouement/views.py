@@ -101,7 +101,6 @@ def edit_forum_post(request, thread_id, post_id):
     # so the form has a default value
     form = PostForm(initial={'text': post.text})
 
-    # TODO: Allow users to edit their own posts
     if (not request.user.has_perm('denouement.change_forumpost') and
         post.author != request.user):
 
@@ -191,6 +190,9 @@ def delete_forum_post(request, thread_id, post_id):
     if is_banned(request.user):
         return HttpResponseForbidden("You are banned")
 
+    if not request.user.has_perm("denouement.delete_forumpost"):
+        return HttpResponseForbidden("You cannot delete this thread")
+
     if request.user.has_perm('denouement.delete_forumpost'):
         thread = get_object_or_404(ForumThread, id=thread_id)
         post = get_object_or_404(ForumPost, id=post_id, thread=thread)
@@ -201,6 +203,10 @@ def delete_forum_post(request, thread_id, post_id):
 
 @login_required(login_url="/forums/account/signin")
 def lock_thread(request, thread_id):
+    # TODO: Probably make custom lock perm?!??
+    if not request.user.has_perm("denouement.delete_forumpost"):
+        return HttpResponseForbidden("You cannot lock this thread")
+
     selected_thread = get_object_or_404(ForumThread, id=thread_id)
     selected_thread.locked = not selected_thread.locked
     selected_thread.save()

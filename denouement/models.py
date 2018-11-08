@@ -21,6 +21,13 @@ class ForumPost(models.Model):
     upvotes = models.IntegerField(default=0)
     date = models.DateTimeField()
 
+    class Meta(object):
+        permissions = (
+            ("denouement.lock_forumthread", "Can lock threads"),
+            ("denouement.pin_forumthread", "Can pin threads"),
+
+        )
+
 class ProfileComment(models.Model):
     text = models.CharField(max_length=60000)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comment_author')

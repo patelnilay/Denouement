@@ -204,8 +204,7 @@ def delete_forum_post(request, thread_id, post_id):
 
 @login_required(login_url="/forums/account/signin")
 def lock_thread(request, thread_id):
-    # TODO: Probably make custom lock perm?!??
-    if not request.user.has_perm("denouement.delete_forumpost"):
+    if not request.user.has_perm("denouement.lock_forumthread"):
         return HttpResponseForbidden("You cannot lock this thread")
 
     selected_thread = get_object_or_404(ForumThread, id=thread_id)
@@ -215,8 +214,7 @@ def lock_thread(request, thread_id):
 
 @login_required(login_url="/forums/account/signin")
 def pin_thread(request, thread_id):
-    # TODO: Probably make custom pin perm !>!?!?!?
-    if not request.user.has_perm("denouement.delete_forumpost"):
+    if not request.user.has_perm("denouement.pin_forumthread"):
         return HttpResponseForbidden("You cannot pin this thread")
 
     selected_thread = get_object_or_404(ForumThread, id=thread_id)

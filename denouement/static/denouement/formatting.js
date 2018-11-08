@@ -90,10 +90,16 @@ window.addEventListener("load", function()
                 additionalParams = additionalParams.split(",");
 
                 let img = document.createElement("img");
+
+                // img.width was 0 for non cached images, so now we're using a listener..
+                img.addEventListener('load', function()
+                {
+                    img.width = additionalParams[1] || img.width;
+                    img.height = additionalParams[2] || img.height;
+                })
                 img.src = imageUrl;
                 img.title = additionalParams[0];
-                img.width = additionalParams[1] || img.width;
-                img.height = additionalParams[2] || img.height;
+                
                 post.appendChild(img);
                 
                 return;

@@ -37,7 +37,9 @@
             </div>
         {% endfor %}
 
-        <hr>
+        {% if threads.pinned_threads %}
+            <hr>
+        {% endif %}
 
         {% for thread in threads.threads %}
             <div class="row align-items-center no-margin master-row">

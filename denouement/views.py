@@ -48,7 +48,6 @@ def delete_thread(request, thread_id):
     category_id = selected_thread.category.id
     selected_thread.delete()
 
-
     return redirect("/forums/categories/" + str(category_id))
 
 
@@ -76,7 +75,6 @@ def post_thread(request, category_id):
         thread = ForumThread.objects.create(title=title, category=category, author=request.user, date=date)
         ForumPost.objects.create(text=text, author=request.user, thread=thread, date=date)
         return redirect('/forums/thread/' + str(thread.id))
-
 
     return render(request, 'denouement/forum_post_thread.html', {'forms': forms})
 
@@ -151,7 +149,10 @@ def view_titled_objects(request, model_type, related_model, id, title, template_
         parent_name = obj.title
         form = PostForm()
     elif model_type._meta.object_name == "ForumCategory":
-        desired_objs = related_model.objects.filter(category=obj).order_by('-date')
+        desired_objs = {}
+        desired_objs['threads'] = related_model.objects.filter(category=obj, pinned=False).order_by('-date')
+        desired_objs['pinned_threads'] = related_model.objects.filter(pinned=True).order_by('-date')
+
         parent_name = obj.title
         post_url = "/forums/post/" + str(obj.id)
 
@@ -210,7 +211,18 @@ def lock_thread(request, thread_id):
     selected_thread = get_object_or_404(ForumThread, id=thread_id)
     selected_thread.locked = not selected_thread.locked
     selected_thread.save()
-    return redirect('../')    
+    return redirect('../')   
+
+@login_required(login_url="/forums/account/signin")
+def pin_thread(request, thread_id):
+    # TODO: Probably make custom pin perm !>!?!?!?
+    if not request.user.has_perm("denouement.delete_forumpost"):
+        return HttpResponseForbidden("You cannot pin this thread")
+
+    selected_thread = get_object_or_404(ForumThread, id=thread_id)
+    selected_thread.pinned = not selected_thread.pinned
+    selected_thread.save()
+    return redirect('../') 
 
 @login_required(login_url="/forums/account/signin")
 def delete_profile_comment(request, username, comment_id):

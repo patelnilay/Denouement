@@ -2,10 +2,44 @@
 
 {% block content %}
     <div class="container category-list">
-        <h1 class="list-title">{{ parent_name }}</h1>
+        <h1 class="list-title">{{ parent.title }}</h1>
         <a type="submit" href="{{ post_url }}" style="margin-top: 10px;" class="col-md-4 col-8 btn btn-outline-primary title-button">NEW THREAD</a>
 
-        {% for thread in threads %}
+        {% if threads.pinned_threads %}
+            <h2 style="margin-bottom: 20px;">⭐Pinned Threads</h2>
+        {% endif %}
+        {% for thread in threads.pinned_threads %}
+            <div class="row align-items-center no-margin master-row">
+                <div class="col-12 no-padding">
+                    {% with "/media/"|add:thread.author.username|add:".jpg" as picture_url %}
+                        <img class="sm-profile-picture" src="{{ picture_url }}" alt="">
+                    {% endwith %}
+                    <div class="col-sm-12 col-md-9 no-padding">
+                        {% if thread.locked %}
+                            <a href="/forums/thread/{{ thread.id }}"><h4>🔒 {{ thread.title }}</h4></a>
+                        {% else %}   
+                            <a href="/forums/thread/{{ thread.id }}"><h4>{{ thread.title }}</h4></a>
+                        {% endif %}
+                        
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-md-12 no-padding">
+                        <a href="/forums/user/{{ thread.author }}"><h6 style="display: inline">{{ thread.author }}</h6></a>
+                        <h6 style="display: inline">| {{ thread.date }}</h6>
+                    </div>
+                </div> 
+
+                <!--
+                <div class="d-none d-md-block offset-md-2 col-md-2">
+                    <h6 class="no-margin">LATEST POST PLACEHOLDER</h6>
+                </div>
+                -->
+            </div>
+        {% endfor %}
+
+        <hr>
+
+        {% for thread in threads.threads %}
             <div class="row align-items-center no-margin master-row">
                 <div class="col-12 no-padding">
                     {% with "/media/"|add:thread.author.username|add:".jpg" as picture_url %}

@@ -10,6 +10,7 @@ urlpatterns = [
     path('forums/user/<username>/comment/<int:comment_id>/delete/', views.delete_profile_comment, name='delete_profile_comment'),
     path('forums/thread/<int:thread_id>/delete/', views.delete_thread, name='delete_thread'),
     path('forums/thread/<int:thread_id>/lock/', views.lock_thread, name='lock_thread'),
+    path('forums/thread/<int:thread_id>/pin/', views.pin_thread, name='pin_thread'),
     path('forums/categories/<int:id>/', views.view_forum_category_untitled, name='forum_category_untitled'),
     path('forums/categories/<int:id>/<title>/', views.view_forum_category, name='forum_category_titled'),
     path('forums/thread/<int:id>/', views.view_forum_thread_untitled, name='forum_thread_untitled'),

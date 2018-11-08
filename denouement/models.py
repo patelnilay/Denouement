@@ -12,6 +12,7 @@ class ForumThread(models.Model):
     post_count = models.IntegerField(default=1)
     date = models.DateTimeField()
     locked = models.BooleanField(default=False)
+    pinned = models.BooleanField(default=False)
 
 class ForumPost(models.Model):
     text = models.CharField(max_length=60000)

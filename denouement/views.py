@@ -306,6 +306,7 @@ def sign_up(request):
             request.session['alert'] = alert
 
             urllib.request.urlretrieve('https://api.adorable.io/avatars/285/'+ user.username + '.png', 'media/' + user.username + '.jpg')
+            login(request, user)
 
             return redirect('/')
     return render(request, 'denouement/sign_up.html', {'form': form})

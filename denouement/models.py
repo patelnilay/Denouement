@@ -14,19 +14,18 @@ class ForumThread(models.Model):
     locked = models.BooleanField(default=False)
     pinned = models.BooleanField(default=False)
 
+    class Meta(object):
+        permissions = (
+            ('lock_forumthread', 'Can lock threads'),
+            ('pin_forumthread', 'Can pin threads'),
+        )
+
 class ForumPost(models.Model):
     text = models.CharField(max_length=60000)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='post_author')
     thread = models.ForeignKey(ForumThread, on_delete=models.CASCADE, related_name='thread')
     upvotes = models.IntegerField(default=0)
     date = models.DateTimeField()
-
-    class Meta(object):
-        permissions = (
-            ("denouement.lock_forumthread", "Can lock threads"),
-            ("denouement.pin_forumthread", "Can pin threads"),
-
-        )
 
 class ProfileComment(models.Model):
     text = models.CharField(max_length=60000)

@@ -60,14 +60,14 @@ window.addEventListener("load", function()
             if (line.startsWith("# "))
             {
                 line = line.replace("# ", "");
-                post.innerHTML += "<h1>" + line + "</h1>";
+                post.innerHTML += "<h1><strong>" + line + "</strong></h1>";
                 return;
             }   
 
             if (line.startsWith("## "))
             {
                 line = line.replace("## ", "");
-                post.innerHTML += "<h2>" + line + "</h2>";
+                post.innerHTML += "<h2><strong>" + line + "</strong></h2>";
                 return;
             }
 
@@ -102,6 +102,12 @@ window.addEventListener("load", function()
                 
                 post.appendChild(img);
                 
+                return;
+            }
+
+            if (line == "-")
+            {
+                post.innerHTML += "<hr>";
                 return;
             }
 

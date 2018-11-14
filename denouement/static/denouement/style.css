@@ -20,9 +20,10 @@ h1 {
 
 hr {
     width: 100%; 
-    color: black; 
-    height: 1px; 
-    background-color:black;
+    height: 0.1px;
+    background-color:#007bff;
+    margin-top: 8px;
+    margin-bottom: 32px;
 }
 
 #title {
@@ -153,4 +154,12 @@ a:active, a:focus {
 .markdown-h2 {
     font-size: 24px;
     font-weight: bold;
+}
+
+.markdown-hr {
+    width: 10%;
+    margin-left: 0;
+    margin-top: -4px;
+    height: 4px;
+    background-color: #4834d4;
 }

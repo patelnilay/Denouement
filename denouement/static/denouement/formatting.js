@@ -107,7 +107,7 @@ window.addEventListener("load", function()
 
             if (line == "-")
             {
-                post.innerHTML += "<hr>";
+                post.innerHTML += "<hr class='markdown-hr'>";
                 return;
             }
 

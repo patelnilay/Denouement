@@ -1,5 +1,6 @@
 .navbar {
     background-color: #7d5fff;
+    margin-bottom: 5%;
 }
 
 body {
@@ -11,6 +12,10 @@ body {
 
 #top_container {
     margin-top: 20%;
+}
+
+h1 {
+    font-weight: bold;
 }
 
 hr {
@@ -47,9 +52,6 @@ hr {
     color: red;
 }
 
-.category-list {
-    margin-top: 5%;
-}
 
 .list-segment {
     padding: 0;
@@ -73,7 +75,8 @@ hr {
 }
 
 .list-title {
-    margin-bottom: 2%;
+    margin-bottom: 4%;
+    font-size: 46px;
 }
 
 .sm-profile-picture {
@@ -130,4 +133,13 @@ a:active, a:focus {
     outline: none;
     border: none;
     -moz-outline-style: none;
+}
+
+#breadcrumb {
+    margin-top: 5%;
+}
+
+#breadcrumb ol {
+    padding: 0;
+    background-color: transparent;
 }

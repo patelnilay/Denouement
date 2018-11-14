@@ -143,3 +143,14 @@ a:active, a:focus {
     padding: 0;
     background-color: transparent;
 }
+
+/* Markdown classes */
+.markdown-h1 {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.markdown-h2 {
+    font-size: 24px;
+    font-weight: bold;
+}
